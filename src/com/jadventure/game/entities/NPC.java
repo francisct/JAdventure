@@ -24,7 +24,7 @@ import com.jadventure.game.items.Storage;
  * be placed within this class. If a method deals with entities in general or
  * with variables not unique to the NPC, place it in the entity class.
  */
-public class NPC extends Entity {
+public class NPC extends Human {
     private int xpGain;
     private String id;
     private List<String> allies;

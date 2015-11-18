@@ -48,7 +48,7 @@ import com.jadventure.game.repository.LocationRepository;
  * be placed within this class. If a method deals with entities in general or
  * with variables not unique to the player, place it in the entity class.
  */
-public class Player extends Entity {
+public class Player extends Human {
     // @Resource
     protected static ItemRepository itemRepo = GameBeans.getItemRepository();
     protected static LocationRepository locationRepo = GameBeans.getLocationRepository();
