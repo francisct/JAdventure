@@ -1,13 +1,32 @@
 package com.jadventure.game.entities;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.jadventure.game.QueueProvider;
 import com.jadventure.game.items.Item;
+import com.jadventure.game.items.Storage;
 
 public class Human extends Entity{
 
+	
+	private String intro;
+	private int strength;
+	private int luck;
+	protected String weapon = "hands";
+	protected Map<EquipmentLocation, Item> equipment;
+
+	public Human(){
+		super(100, 100, "default", 0, null);
+		this.equipment = new HashMap<EquipmentLocation, Item>();
+	}
+	
+	public Human(int healthMax, int health, String name, int gold, Storage storage, Map<EquipmentLocation, Item> equipment){
+        super(healthMax, health, name, gold, storage);
+	    this.equipment = equipment;
+	}
+	
 	public Map<String, String> equipItem(EquipmentLocation place, Item item) {
 	    double oldDamage = this.damage;
 	    int oldArmour = this.armour;
@@ -146,6 +165,42 @@ public class Human extends Entity{
 	        }
 	    }
 	    QueueProvider.offer("------------------------------------------------------------"); 
+	}
+
+	public void setIntro(String intro) {
+	    this.intro = intro;
+	}
+
+	public String getIntro() {
+	    return this.intro;
+	}
+
+	public Map<EquipmentLocation, Item> getEquipment() {
+	    return Collections.unmodifiableMap(equipment);
+	}
+
+	public void setEquipment(Map<EquipmentLocation, Item> equipment) {
+	    this.equipment = equipment;
+	}
+
+	public int getStrength() {
+	    return strength;
+	}
+
+	public void setStrength(int strength) {
+	    this.strength = strength;
+	}
+
+	public int getLuck() {
+	    return luck;
+	}
+
+	public void setLuck(int luck) {
+	    this.luck = luck;
+	}
+
+	public String getWeapon() {
+	    return weapon;
 	}
 
 }
