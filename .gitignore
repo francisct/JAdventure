@@ -6,7 +6,6 @@ json/locations.json
 *.eml
 
 # Package Files #
-*.jar
 *.war
 *.ear
 build/jar/*.jar
