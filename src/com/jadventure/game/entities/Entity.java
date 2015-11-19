@@ -12,7 +12,7 @@ import com.jadventure.game.repository.ItemRepository;
 /**
  * superclass for all entities (includes player, monsters...)
  */
-public abstract class Entity {
+public abstract class Entity implements IEntity{
     // @Resource
     protected ItemRepository itemRepo = GameBeans.getItemRepository();
     
