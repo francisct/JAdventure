@@ -5,7 +5,8 @@ import com.jadventure.game.entities.Entity;
 import com.jadventure.game.entities.Player;
 import com.jadventure.game.entities.NPC;
 import com.jadventure.game.monsters.Monster;
-import com.jadventure.game.QueueProvider;
+import com.jadventure.runtime.ServiceLocator;
+
 import com.jadventure.game.CharacterChange;
 import com.jadventure.game.items.ItemStack;
 import com.jadventure.game.items.Item;
@@ -38,16 +39,16 @@ public class BattleMenu extends Menus {
         this.armour = player.getArmour();
         this.damage = player.getDamage();
         while (npcOpponent.getHealth() > 0 && player.getHealth() > 0 && !escapeSuccessful) {
-            QueueProvider.offer("\nWhat is your choice?");
+            ServiceLocator.getIOHandler().sendOutput("\nWhat is your choice?");
             MenuItem selectedItem = displayMenu(this.menuItems);
             testSelected(selectedItem);
         }
         if (player.getHealth() == 0) {
-            QueueProvider.offer("You died... Start again? (y/n)");
-            String reply = QueueProvider.take().toLowerCase();
+            ServiceLocator.getIOHandler().sendOutput("You died... Start again? (y/n)");
+            String reply = ServiceLocator.getIOHandler().getInput().toLowerCase();
             while (!reply.startsWith("y") && !reply.startsWith("n")) {
-                QueueProvider.offer("You died... Start again? (y/n)");
-                reply = QueueProvider.take().toLowerCase();
+                ServiceLocator.getIOHandler().sendOutput("You died... Start again? (y/n)");
+                reply = ServiceLocator.getIOHandler().getInput().toLowerCase();
             }
             if (reply.startsWith("y")) {
                 throw new DeathException("restart");
@@ -74,14 +75,14 @@ public class BattleMenu extends Menus {
                 Item item = GameBeans.getItemRepository().getItem(itemId);
                 npcOpponent.removeItemFromStorage(item);
                 this.player.getLocation().addItem(item);
-                QueueProvider.offer("Your opponent dropped a " + item.getName());
+                ServiceLocator.getIOHandler().sendOutput("Your opponent dropped a " + item.getName());
             }
 
             this.player.getLocation().removeNpc(npcOpponent);
             this.player.setGold(this.player.getGold() + npcOpponent.getGold());
-            QueueProvider.offer("You killed a " + npcOpponent.getName() + "\nYou have gained " + xp + " XP and " + npcOpponent.getGold() + " gold");
+            ServiceLocator.getIOHandler().sendOutput("You killed a " + npcOpponent.getName() + "\nYou have gained " + xp + " XP and " + npcOpponent.getGold() + " gold");
             if (oldLevel < newLevel) {
-                QueueProvider.offer("You've are now level " + newLevel + "!");
+                ServiceLocator.getIOHandler().sendOutput("You've are now level " + newLevel + "!");
             }
             CharacterChange cc = new CharacterChange();
             cc.trigger(this.player, "kill", npcOpponent.getName());
@@ -101,16 +102,16 @@ public class BattleMenu extends Menus {
         this.armour = player.getArmour();
         this.damage = player.getDamage();
         while (monsterOpponent.getHealth() > 0 && player.getHealth() > 0 && !escapeSuccessful) {
-            QueueProvider.offer("\nWhat is your choice?");
+            ServiceLocator.getIOHandler().sendOutput("\nWhat is your choice?");
             MenuItem selectedItem = displayMenu(this.menuItems);
             testSelected(selectedItem);
         }
         if (player.getHealth() == 0) {
-            QueueProvider.offer("You died... Start again? (y/n)");
-            String reply = QueueProvider.take().toLowerCase();
+            ServiceLocator.getIOHandler().sendOutput("You died... Start again? (y/n)");
+            String reply = ServiceLocator.getIOHandler().getInput().toLowerCase();
             while (!reply.startsWith("y") && !reply.startsWith("n")) {
-                QueueProvider.offer("You died... Start again? (y/n)");
-                reply = QueueProvider.take().toLowerCase();
+                ServiceLocator.getIOHandler().sendOutput("You died... Start again? (y/n)");
+                reply = ServiceLocator.getIOHandler().getInput().toLowerCase();
             }
             if (reply.startsWith("y")) {
                 throw new DeathException("restart");
@@ -137,14 +138,14 @@ public class BattleMenu extends Menus {
                 Item item = GameBeans.getItemRepository().getItem(itemId);
                 monsterOpponent.removeItemFromStorage(item);
                 this.player.getLocation().addItem(item);
-                QueueProvider.offer("Your opponent dropped a " + item.getName());
+                ServiceLocator.getIOHandler().sendOutput("Your opponent dropped a " + item.getName());
             }
 
             this.player.getLocation().removeMonster(monsterOpponent);
             this.player.setGold(this.player.getGold() + monsterOpponent.getGold());
-            QueueProvider.offer("You killed a " + monsterOpponent.getName() + "\nYou have gained " + xp + " XP and " + monsterOpponent.getGold() + " gold");
+            ServiceLocator.getIOHandler().sendOutput("You killed a " + monsterOpponent.getName() + "\nYou have gained " + xp + " XP and " + monsterOpponent.getGold() + " gold");
             if (oldLevel < newLevel) {
-                QueueProvider.offer("You've are now level " + newLevel + "!");
+                ServiceLocator.getIOHandler().sendOutput("You've are now level " + newLevel + "!");
             }
             CharacterChange cc = new CharacterChange();
             cc.trigger(this.player, "kill", monsterOpponent.getName());
@@ -168,11 +169,11 @@ public class BattleMenu extends Menus {
             case "defend": {
                 mutateStats(0.5, 1);
                 if (npcOpponent == null) {
-                    QueueProvider.offer("\nYou get ready to defend against the " + monsterOpponent.getName() + ".");
+                    ServiceLocator.getIOHandler().sendOutput("\nYou get ready to defend against the " + monsterOpponent.getName() + ".");
                     attack(player, monsterOpponent);
                     attack(monsterOpponent, player);
                 } else {
-                    QueueProvider.offer("\nYou get ready to defend against the " + npcOpponent.getName() + ".");
+                    ServiceLocator.getIOHandler().sendOutput("\nYou get ready to defend against the " + npcOpponent.getName() + ".");
                     attack(player, npcOpponent);
                     attack(npcOpponent, player);
                 }
@@ -218,10 +219,10 @@ public class BattleMenu extends Menus {
         double minEscapeLevel = (rand.nextInt((upperBound - lowerBound) + 1) + lowerBound) / 100.0;
       
         if (escapeLevel > minEscapeLevel) {
-            QueueProvider.offer("You have managed to escape the: " + attacker.getName());
+            ServiceLocator.getIOHandler().sendOutput("You have managed to escape the: " + attacker.getName());
             return true;
         } else {
-            QueueProvider.offer("You failed to escape the: " + attacker.getName());
+            ServiceLocator.getIOHandler().sendOutput("You failed to escape the: " + attacker.getName());
             return false;
         }
     }
@@ -234,18 +235,18 @@ public class BattleMenu extends Menus {
         double critCalc = random.nextDouble();
         if (critCalc < attacker.getCritChance()) {
             damage += damage;
-            QueueProvider.offer("Crit hit! Damage has been doubled!");
+            ServiceLocator.getIOHandler().sendOutput("Crit hit! Damage has been doubled!");
         }
         int healthReduction = (int) ((((3 * attacker.getLevel() / 50 + 2) * damage * damage / (defender.getArmour() + 1)/ 100) + 2) * (random.nextDouble() + 1));
         defender.setHealth((defender.getHealth() - healthReduction));
         if (defender.getHealth() < 0) {
             defender.setHealth(0);
         }
-        QueueProvider.offer(healthReduction + " damage dealt!");
+        ServiceLocator.getIOHandler().sendOutput(healthReduction + " damage dealt!");
         if (attacker instanceof Player) {
-            QueueProvider.offer("The " + defender.getName() + "'s health is " + defender.getHealth());
+            ServiceLocator.getIOHandler().sendOutput("The " + defender.getName() + "'s health is " + defender.getHealth());
         } else {
-            QueueProvider.offer("Your health is " + defender.getHealth());
+            ServiceLocator.getIOHandler().sendOutput("Your health is " + defender.getHealth());
         }
     }
 
@@ -263,8 +264,8 @@ public class BattleMenu extends Menus {
 
     private void equip() {
         player.printStorage();
-        QueueProvider.offer("What item do you want to use?");
-        String itemName = QueueProvider.take();
+        ServiceLocator.getIOHandler().sendOutput("What item do you want to use?");
+        String itemName = ServiceLocator.getIOHandler().getInput();
         if (!itemName.equalsIgnoreCase("back")) {
             player.equipItem(itemName);
         }
@@ -272,16 +273,16 @@ public class BattleMenu extends Menus {
 
     private void unequip() {
         player.printEquipment();
-        QueueProvider.offer("What item do you want to unequip?");
-        String itemName = QueueProvider.take();
+        ServiceLocator.getIOHandler().sendOutput("What item do you want to unequip?");
+        String itemName = ServiceLocator.getIOHandler().getInput();
         if (!itemName.equalsIgnoreCase("back")) {
             player.dequipItem(itemName);
         }
     }
 
     private void viewStats() {
-        QueueProvider.offer("\nWhat is your command? ex. View stats(vs), View Backpack(vb), View Equipment(ve) ");
-        String input = QueueProvider.take();
+        ServiceLocator.getIOHandler().sendOutput("\nWhat is your command? ex. View stats(vs), View Backpack(vb), View Equipment(ve) ");
+        String input = ServiceLocator.getIOHandler().getInput();
         switch (input) {
             case "vs":
             case "viewstats":

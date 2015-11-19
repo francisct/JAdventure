@@ -1,69 +1,72 @@
-package com.jadventure.game;
+package com.jadventure.runtime;
 
 import java.net.*;
 import java.io.*;
-import java.util.Scanner;
+
+import com.jadventure.game.GameModeData;
 
 public class Client {
 
-    DataInputStream in;
-    DataOutputStream out;
+    public Client(GameModeData gameModeData) {
+        serverName = gameModeData.getServerName();
+        port = gameModeData.getPort();
 
-    public Client(String serverName, int port) {
+        ServiceLocator.provide(new LocalIOHandler());
+    }
+
+    public void Listen() {
         Socket client = null;
+
         try {
             client = new Socket(serverName, port);
-            
+
             in = new DataInputStream(client.getInputStream());
             out = new DataOutputStream(client.getOutputStream());
 
-            while(true) {
+            while (true) {
                 String serverMessage = in.readUTF();
+
                 if (serverMessage.endsWith("END")) {
                     serverMessage = serverMessage.substring(0, serverMessage.length() - 3);
                     if (serverMessage.equals("QUERY")) {
-                        getInput();
+                        String input = ServiceLocator.getIOHandler().getInput();
+                        out.writeUTF(input);
                     } else if (serverMessage.equals("EXIT")) {
                         break;
                     } else {
-                        System.out.println(serverMessage);
+                        ServiceLocator.getIOHandler().sendOutput(serverMessage);
                     }
                 } else {
                     String message = "";
-                    while(!serverMessage.endsWith("END")) {
+                    while (!serverMessage.endsWith("END")) {
                         message += serverMessage;
                         serverMessage = in.readUTF();
                     }
                     message = serverMessage.substring(0, serverMessage.length() - 3);
                     if (message.equals("QUERY")) {
-                        getInput();
+                        String input = ServiceLocator.getIOHandler().getInput();
+                        out.writeUTF(input);
                     } else if (serverMessage.equals("EXIT")) {
                         break;
                     } else {
-                        System.out.println(serverMessage);
+                        ServiceLocator.getIOHandler().sendOutput(serverMessage);
                     }
                 }
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
-        	try {
-				client.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public void getInput() {
-         Scanner input;
-         try {
-             input = new Scanner(System.in);
-             String userInput = input.nextLine();
-             out.writeUTF(userInput);
-         } catch (IOException e) {
-             e.printStackTrace(); 
-         } 
-    }
+    private String serverName;
+    private int port;
+    
+    private DataInputStream in;
+    private DataOutputStream out;
 }
-

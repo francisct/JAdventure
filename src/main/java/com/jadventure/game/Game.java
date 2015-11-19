@@ -4,6 +4,7 @@ import com.jadventure.game.entities.Player;
 import com.jadventure.game.monsters.Monster;
 import com.jadventure.game.monsters.MonsterFactory;
 import com.jadventure.game.repository.LocationRepository;
+import com.jadventure.runtime.ServiceLocator;
 import com.jadventure.game.prompts.CommandParser;
 
 import java.util.ArrayList;
@@ -27,13 +28,13 @@ public class Game {
                   newGameStart(player);
                   break;
               case "old":
-                  QueueProvider.offer("Welcome back, " + player.getName() + "!");
-                  QueueProvider.offer("");
+                  ServiceLocator.getIOHandler().sendOutput("Welcome back, " + player.getName() + "!");
+                  ServiceLocator.getIOHandler().sendOutput("");
                   player.getLocation().print();
                   gamePrompt(player);
                   break;
               default:
-                  QueueProvider.offer("Invalid player type");
+                  ServiceLocator.getIOHandler().sendOutput("Invalid player type");
                   break;
           }
     }
@@ -44,13 +45,13 @@ public class Game {
      * character and welcomes him / her. After that, it goes to the normal game prompt.
      */
     public void newGameStart(Player player) throws DeathException {
-        QueueProvider.offer(player.getIntro());
-        String userInput = QueueProvider.take();
+        ServiceLocator.getIOHandler().sendOutput(player.getIntro());
+        String userInput = ServiceLocator.getIOHandler().getInput();
         player.setName(userInput);
         LocationRepository locationRepo = GameBeans.getLocationRepository(player.getName());
         this.player.setLocation(locationRepo.getInitialLocation());
         player.save();
-        QueueProvider.offer("Welcome to Silliya, " + player.getName() + ".");
+        ServiceLocator.getIOHandler().sendOutput("Welcome to Silliya, " + player.getName() + ".");
         player.getLocation().print();
         gamePrompt(player);
     }
@@ -65,8 +66,8 @@ public class Game {
         boolean continuePrompt = true;
         try {
             while (continuePrompt) {
-                QueueProvider.offer("\nPrompt:");
-                String command = QueueProvider.take().toLowerCase();
+                ServiceLocator.getIOHandler().sendOutput("\nPrompt:");
+                String command = ServiceLocator.getIOHandler().getInput().toLowerCase();
                 continuePrompt = parser.parse(player, command);
             }
         } catch (DeathException e) {

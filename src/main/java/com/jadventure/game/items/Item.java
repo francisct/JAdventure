@@ -4,8 +4,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.jadventure.game.QueueProvider;
+
 import com.jadventure.game.entities.EquipmentLocation;
+import com.jadventure.runtime.ServiceLocator;
 
 /**
  * Items lay around in the game world and can be taken with you.
@@ -96,10 +97,10 @@ public class Item {
     }
 
     public void display() {
-        QueueProvider.offer("Name: " + name +
+        ServiceLocator.getIOHandler().sendOutput("Name: " + name +
                 "\nDescription: " + description + "\nLevel: " + level);
         for (Map.Entry<String, Integer> entry : properties.entrySet()) {
-            QueueProvider.offer(entry.getKey() + ": " + entry.getValue());
+            ServiceLocator.getIOHandler().sendOutput(entry.getKey() + ": " + entry.getValue());
         }
     }
 
