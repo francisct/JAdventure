@@ -4,6 +4,7 @@ import com.jadventure.game.entities.Player;
 import com.jadventure.game.DeathException;
 import com.jadventure.game.Game;
 import com.jadventure.game.QueueProvider;
+import com.jadventure.game.notification.DeathObserver;
 
 /**
  * Called when creating a new Player
@@ -27,10 +28,15 @@ public class ChooseClassMenu extends Menus {
         String key = m.getKey();
         if(key.equals("recruit")) {
             Player player = Player.getInstance("recruit");
+            //register death
+            player.addObserver(new DeathObserver());
             new Game(player, "new");
             return true;
         } else if(key.equals("sewerrat")) {
             Player player = Player.getInstance("sewerrat");
+            //register death
+            player.addObserver(new DeathObserver());
+
             new Game(player, "new");
             return true;
         } else {

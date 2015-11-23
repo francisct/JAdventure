@@ -14,6 +14,7 @@ import com.jadventure.game.GameModeType;
 import com.jadventure.game.JAdventure;
 import com.jadventure.game.QueueProvider;
 import com.jadventure.game.entities.Player;
+import com.jadventure.game.notification.DeathObserver;
 
 /**
  * The first menu displayed on user screen
@@ -84,6 +85,8 @@ public class MainMenu extends Menus implements Runnable {
                     key = QueueProvider.take();
                     if (Player.profileExists(key)) {
                         player = Player.load(key);
+                        //register observer
+                        player.addObserver( new DeathObserver());
                     } else if (key.equals("exit") || key.equals("back")) {
                         exit = true;
                         break;

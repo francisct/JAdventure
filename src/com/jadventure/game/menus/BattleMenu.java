@@ -43,17 +43,9 @@ public class BattleMenu extends Menus {
             testSelected(selectedItem);
         }
         if (player.getHealth() == 0) {
-            QueueProvider.offer("You died... Start again? (y/n)");
-            String reply = QueueProvider.take().toLowerCase();
-            while (!reply.startsWith("y") && !reply.startsWith("n")) {
-                QueueProvider.offer("You died... Start again? (y/n)");
-                reply = QueueProvider.take().toLowerCase();
-            }
-            if (reply.startsWith("y")) {
-                throw new DeathException("restart");
-            } else if (reply.startsWith("n")) {
-                throw new DeathException("close");
-            }
+            //player died
+            player.stateChanged();
+
         }  else if (npcOpponent.getHealth() == 0) {
             int xp = npcOpponent.getXPGain();
             this.player.setXP(this.player.getXP() + xp);
@@ -106,17 +98,10 @@ public class BattleMenu extends Menus {
             testSelected(selectedItem);
         }
         if (player.getHealth() == 0) {
-            QueueProvider.offer("You died... Start again? (y/n)");
-            String reply = QueueProvider.take().toLowerCase();
-            while (!reply.startsWith("y") && !reply.startsWith("n")) {
-                QueueProvider.offer("You died... Start again? (y/n)");
-                reply = QueueProvider.take().toLowerCase();
-            }
-            if (reply.startsWith("y")) {
-                throw new DeathException("restart");
-            } else if (reply.startsWith("n")) {
-                throw new DeathException("close");
-            }
+
+            //player died
+            player.stateChanged();
+
         }  else if (monsterOpponent.getHealth() == 0) {
             int xp = monsterOpponent.getXPGain();
             this.player.setXP(this.player.getXP() + xp);

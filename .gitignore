@@ -40,3 +40,4 @@ nb-configuration.xml
 
 # Log files #
 *.log
+out/

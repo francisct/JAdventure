@@ -3,6 +3,7 @@ package com.jadventure.game;
 import com.jadventure.game.entities.Player;
 import com.jadventure.game.monsters.Monster;
 import com.jadventure.game.monsters.MonsterFactory;
+import com.jadventure.game.notification.DeathObserver;
 import com.jadventure.game.repository.LocationRepository;
 import com.jadventure.game.prompts.CommandParser;
 
