@@ -23,6 +23,8 @@ import com.jadventure.game.notification.DeathObserver;
  * start a new one, or exit to the terminal.
  */
 public class MainMenu extends Menus implements Runnable {
+
+    static boolean exitGame = false;
      
     public MainMenu(Socket server, GameModeType mode){
         QueueProvider.startMessenger(mode, server);
@@ -41,12 +43,17 @@ public class MainMenu extends Menus implements Runnable {
         this.menuItems.add(new MenuItem("Load", "Loads an existing Game"));
         this.menuItems.add(new MenuItem("Delete", "Deletes an existing Game"));
         this.menuItems.add(new MenuItem("Exit", null, "quit"));
-        
+
+
         while(true) {
             try {
                 MenuItem selectedItem = displayMenu(this.menuItems);
                 boolean exit = testOption(selectedItem);
                 if (!exit) {
+                    break;
+                }
+                if(exitGame)
+                {
                     break;
                 }
             } catch (DeathException e) {
@@ -57,6 +64,10 @@ public class MainMenu extends Menus implements Runnable {
         }
         QueueProvider.offer("EXIT");
     
+    }
+
+    public static void ExitGame(){
+        exitGame = true;
     }
 
     private static boolean testOption(MenuItem m) throws DeathException {

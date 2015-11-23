@@ -62,6 +62,7 @@ public class Game {
      *
      * This keeps looping as long as the player didn't type an exit command.
      */
+
     public void gamePrompt(Player player) throws DeathException {
         boolean continuePrompt = true;
         try {

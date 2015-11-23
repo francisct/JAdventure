@@ -2,8 +2,10 @@ package com.jadventure.game.notification;
 
 
 import com.jadventure.game.DeathException;
+import com.jadventure.game.Game;
 import com.jadventure.game.QueueProvider;
 import com.jadventure.game.entities.Player;
+import com.jadventure.game.menus.MainMenu;
 
 /**
  * Created by michal on 11/22/2015.
@@ -26,10 +28,12 @@ public class DeathObserver implements IObserver {
         }
 
         if (reply.startsWith("y")) {
+            //Game.Replay();
             throw new DeathException("restart");
 
         } else if (reply.startsWith("n")) {
-            throw new DeathException("close");
+            //throw new DeathException("close");
+            MainMenu.ExitGame();
         }
     }
 
