@@ -56,6 +56,8 @@ public class Game {
         gamePrompt(player);
     }
 
+
+
     /**
      * This is the main loop for the player-game interaction. It gets input from the
      * command line and checks if it is a recognised command.
@@ -63,10 +65,12 @@ public class Game {
      * This keeps looping as long as the player didn't type an exit command.
      */
 
+
     public void gamePrompt(Player player) throws DeathException {
         boolean continuePrompt = true;
         try {
-            while (continuePrompt) {
+            //prompt only if user is still Alive
+            while (continuePrompt && player.getState()) {
                 QueueProvider.offer("\nPrompt:");
                 String command = QueueProvider.take().toLowerCase();
                 continuePrompt = parser.parse(player, command);
