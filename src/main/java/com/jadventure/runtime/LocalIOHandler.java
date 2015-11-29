@@ -4,11 +4,12 @@ import java.util.Scanner;
 
 public class LocalIOHandler implements IOHandler {
 
+    // System.in is owned by the VM, which is responsible for closing it
+    @SuppressWarnings("resource")
     @Override
     public String getInput() {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);    
         String input = scanner.nextLine();
-        scanner.close();
 
         return input;
     }

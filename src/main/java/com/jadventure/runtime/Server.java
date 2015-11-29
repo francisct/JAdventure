@@ -3,7 +3,9 @@ package com.jadventure.runtime;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jadventure.game.GameModeData;
 import com.jadventure.game.menus.MainMenu;
@@ -15,36 +17,44 @@ public class Server {
     }
 
     public void run() {
-        while (true) {
-            ServerSocket listener = null;
-            try {
-                listener = new ServerSocket(port);
-                while (true) {
-                    Socket server = listener.accept();
-
-                    Runnable r = new Runnable() {
-                        @Override
-                        public void run() {
-                            MainMenu menu = new MainMenu(server);
-                            menu.start();
-                        }
-                    };
-                 
-                    new Thread(r).start();
-                }
-            } catch (SocketException e) {
-                e.printStackTrace();
-            } catch (IOException c) {
-                c.printStackTrace();
-            } finally {
-                try {
-                    listener.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        try(ServerSocket serverSocket = new ServerSocket(port)) {
+            while (true) {
+                acceptConnections(serverSocket);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+    }
+
+    private void acceptConnections(ServerSocket listener) throws IOException {
+        Socket client = listener.accept();
+
+        logger.info("Client connected: " + client.getInetAddress().getCanonicalHostName());
+
+        Thread thread = new Thread(new ClientHandler(client));
+        thread.start();
+    }
+
+    private class ClientHandler implements Runnable {
+        
+        public ClientHandler(Socket client) {
+            this.client = client;
         }
+
+        @Override
+        public void run() {
+            logger.debug("Server thread started with name: " + Thread.currentThread().getName());
+
+            ServiceLocator.provide(new NetworkIOHandler(client));
+
+            MainMenu menu = new MainMenu();
+            menu.show();
+        }
+
+        private Socket client;
     }
 
     private int port;
+
+    private static Logger logger = LoggerFactory.getLogger(Server.class);
 }

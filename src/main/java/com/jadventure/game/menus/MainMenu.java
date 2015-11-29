@@ -2,7 +2,6 @@ package com.jadventure.game.menus;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,9 +12,7 @@ import com.jadventure.game.Game;
 import com.jadventure.game.JAdventure;
 
 import com.jadventure.game.entities.Player;
-import com.jadventure.runtime.NetworkIOHandler;
 import com.jadventure.runtime.ServiceLocator;
-import com.jadventure.runtime.LocalIOHandler;
 
 /**
  * The first menu displayed on user screen
@@ -23,23 +20,9 @@ import com.jadventure.runtime.LocalIOHandler;
  * This menu lets the player choose whether to load an exiting game,
  * start a new one, or exit to the terminal.
  */
-public class MainMenu extends Menus implements Runnable {
-     
-    public MainMenu() 
-    {
-    	ServiceLocator.provide(new LocalIOHandler());
-    }
-       
-    public MainMenu(Socket server)
-    {       
-        ServiceLocator.provide(new NetworkIOHandler(server));
-    }
-    
-    public void run() {
-        start();
-    }
-
-    public void start() {
+public class MainMenu extends Menus {
+            
+    public void show() {
         this.menuItems.add(new MenuItem("Start", "Starts a new Game", "new"));
         this.menuItems.add(new MenuItem("Load", "Loads an existing Game"));
         this.menuItems.add(new MenuItem("Delete", "Deletes an existing Game"));
