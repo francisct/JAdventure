@@ -23,13 +23,6 @@ public abstract class Monster extends Entity {
     public String monsterType;
     private int xpGain;
     private ItemRepository itemRepo = GameBeans.getItemRepository();
-	private String name;
-	private String intro;
-	private int level;
-	private int strength;
-	private int luck;
-	protected String weapon = "hands";
-	protected Map<EquipmentLocation, Item> equipment;
 
     public int getXPGain() {
         return xpGain;
@@ -73,55 +66,4 @@ public abstract class Monster extends Entity {
         }
     }
 
-    public String getName() {
-	    return this.name;
-	}
-
-	public void setName(String name) {
-	    this.name = name;
-	}
-
-	public void setIntro(String intro) {
-	    this.intro = intro;
-	}
-
-	public String getIntro() {
-	    return this.intro;
-	}
-
-	public int getLevel() {
-	    return level;
-	}
-
-	public void setLevel(int level) {
-	    this.level = level;
-	}
-
-	public Map<EquipmentLocation, Item> getEquipment() {
-	    return Collections.unmodifiableMap(equipment);
-	}
-
-	public void setEquipment(Map<EquipmentLocation, Item> equipment) {
-	    this.equipment = equipment;
-	}
-
-	public int getStrength() {
-	    return strength;
-	}
-
-	public void setStrength(int strength) {
-	    this.strength = strength;
-	}
-
-	public int getLuck() {
-	    return luck;
-	}
-
-	public void setLuck(int luck) {
-	    this.luck = luck;
-	}
-
-	public String getWeapon() {
-	    return weapon;
-	}
 }
