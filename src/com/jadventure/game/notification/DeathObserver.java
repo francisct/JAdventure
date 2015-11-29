@@ -1,7 +1,6 @@
 package com.jadventure.game.notification;
 
 
-import com.jadventure.game.DeathException;
 import com.jadventure.game.Game;
 import com.jadventure.game.QueueProvider;
 import com.jadventure.game.entities.Player;
@@ -14,26 +13,26 @@ public class DeathObserver implements IObserver {
 
 
     @Override
-    public void update(boolean isAlive, Player player) throws DeathException {
-        QueueProvider.offer("DEATH OBSERVER Player is alive : "+isAlive);
+    public void update(boolean isAlive, Player player) {
+        //player died
         prompt(player);
     }
 
-    private void prompt(Player player) throws DeathException {
+    private void prompt(Player player)  {
         QueueProvider.offer("You died... Start again? (y/n)");
         String reply = QueueProvider.take().toLowerCase();
         while (!reply.startsWith("y") && !reply.startsWith("n")) {
             QueueProvider.offer("You died... Start again? (y/n)");
             reply = QueueProvider.take().toLowerCase();
         }
-
-        if (reply.startsWith("y")) {
-            //Game.Replay();
-            throw new DeathException("restart");
-
-        } else if (reply.startsWith("n")) {
-            //throw new DeathException("close");
+        if (reply.startsWith("n")) {
+            //throw DEathexception close
             MainMenu.ExitGame();
+        }
+
+        else if (reply.startsWith("y")) {
+            //do nothing
+            //restart just goes to the next iteration of while loop (never exits). IN MAINMENU.JAVA
         }
     }
 

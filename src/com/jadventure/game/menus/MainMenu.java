@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import com.jadventure.game.DeathException;
 import com.jadventure.game.Game;
 import com.jadventure.game.GameModeType;
 import com.jadventure.game.JAdventure;
@@ -18,25 +17,27 @@ import com.jadventure.game.notification.DeathObserver;
 
 /**
  * The first menu displayed on user screen
+ *
  * @see JAdventure
  * This menu lets the player choose whether to load an exiting game,
  * start a new one, or exit to the terminal.
  */
 public class MainMenu extends Menus implements Runnable {
 
-    static boolean exitGame = false;
-     
-    public MainMenu(Socket server, GameModeType mode){
+    static boolean exitGamePlayerDied = false;
+
+    public MainMenu(Socket server, GameModeType mode) {
         QueueProvider.startMessenger(mode, server);
     }
 
     public MainMenu() {
         start();
     }
-    
+
     public void run() {
         start();
     }
+
 
     public void start() {
         this.menuItems.add(new MenuItem("Start", "Starts a new Game", "new"));
@@ -45,34 +46,24 @@ public class MainMenu extends Menus implements Runnable {
         this.menuItems.add(new MenuItem("Exit", null, "quit"));
 
 
-        while(true) {
-            try {
-                MenuItem selectedItem = displayMenu(this.menuItems);
-                boolean exit = testOption(selectedItem);
-                if (!exit) {
-                    break;
-                }
-                if(exitGame)
-                {
-                    break;
-                }
-            } catch (DeathException e) {
-                if (e.getLocalisedMessage().equals("close")) {
-                    break;
-                }
+        while (true) {
+            MenuItem selectedItem = displayMenu(this.menuItems);
+            boolean continueGame = testOption(selectedItem);
+            if (!continueGame || exitGamePlayerDied) {
+                break;
             }
         }
         QueueProvider.offer("EXIT");
-    
+
     }
 
-    public static void ExitGame(){
-        exitGame = true;
+    public static void ExitGame() {
+        exitGamePlayerDied = true;
     }
 
-    private static boolean testOption(MenuItem m) throws DeathException {
+    private static boolean testOption(MenuItem m) {
         String key = m.getKey();
-        switch (key){
+        switch (key) {
             case "start":
                 try {
                     Path orig = Paths.get("json/original_data/locations.json");
@@ -97,7 +88,7 @@ public class MainMenu extends Menus implements Runnable {
                     if (Player.profileExists(key)) {
                         player = Player.load(key);
                         //register observer
-                        player.addObserver( new DeathObserver());
+                        player.addObserver(new DeathObserver());
                     } else if (key.equals("exit") || key.equals("back")) {
                         exit = true;
                         break;
@@ -142,20 +133,19 @@ public class MainMenu extends Menus implements Runnable {
     }
 
     private static boolean deleteDirectory(File directory) {
-        if(directory.exists()){
+        if (directory.exists()) {
             File[] files = directory.listFiles();
-            if(null!=files){
-                for(int i=0; i<files.length; i++) {
-                    if(files[i].isDirectory()) {
+            if (null != files) {
+                for (int i = 0; i < files.length; i++) {
+                    if (files[i].isDirectory()) {
                         deleteDirectory(files[i]);
-                    }
-                    else {
+                    } else {
                         files[i].delete();
                     }
                 }
             }
         }
-        return(directory.delete());
+        return (directory.delete());
     }
 
     private static void listProfiles() {
@@ -167,7 +157,7 @@ public class MainMenu extends Menus implements Runnable {
             if (new File("json/profiles/" + name).isDirectory()) {
                 QueueProvider.offer("  " + i + ". " + name);
             }
-           i += 1;
+            i += 1;
         }
     }
 }

@@ -20,7 +20,7 @@ public class Game {
     public Monster monster;
     Player player = null;
 
-    public Game(Player player, String playerType) throws DeathException {
+    public Game(Player player, String playerType)  {
           this.parser = new CommandParser(player);
           this.player = player;
           switch (playerType) {
@@ -44,7 +44,7 @@ public class Game {
      * It prints the introduction text first and asks for the name of the player's
      * character and welcomes him / her. After that, it goes to the normal game prompt.
      */
-    public void newGameStart(Player player) throws DeathException {
+    public void newGameStart(Player player)  {
         QueueProvider.offer(player.getIntro());
         String userInput = QueueProvider.take();
         player.setName(userInput);
@@ -66,21 +66,15 @@ public class Game {
      */
 
 
-    public void gamePrompt(Player player) throws DeathException {
+    public void gamePrompt(Player player)   {
         boolean continuePrompt = true;
-        try {
+
             //prompt only if user is still Alive
             while (continuePrompt && player.getState()) {
                 QueueProvider.offer("\nPrompt:");
                 String command = QueueProvider.take().toLowerCase();
                 continuePrompt = parser.parse(player, command);
             }
-        } catch (DeathException e) {
-            if (e.getLocalisedMessage().equals("replay")) {
-                return;
-            } else {
-                throw e;
-            }
-        }
+
     }
 }

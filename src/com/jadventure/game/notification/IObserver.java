@@ -1,6 +1,5 @@
 package com.jadventure.game.notification;
 
-import com.jadventure.game.DeathException;
 import com.jadventure.game.entities.Player;
 
 /**
@@ -8,5 +7,5 @@ import com.jadventure.game.entities.Player;
  */
 public interface IObserver  {
 
-    void update(boolean isAlive, Player player) throws DeathException;
+    void update(boolean isAlive, Player player);
 }

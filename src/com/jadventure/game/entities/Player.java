@@ -17,7 +17,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import com.jadventure.game.DeathException;
 import com.jadventure.game.GameBeans;
 import com.jadventure.game.QueueProvider;
 import com.jadventure.game.items.Item;
@@ -468,7 +467,7 @@ public class Player extends Entity implements IObservable{
     	return getLocation().getLocationType();
     }
 
-    public void attack(String opponentName) throws DeathException {
+    public void attack(String opponentName){
         Monster monsterOpponent = null;
         NPC npcOpponent = null;
         List<Monster> monsters = getLocation().getMonsters();
@@ -509,7 +508,7 @@ public class Player extends Entity implements IObservable{
     }
 
     //player died
-    public void stateChanged() throws DeathException {
+    public void stateChanged() {
         this.isAlive = false;
         notifyObservers();
     }
@@ -526,7 +525,7 @@ public class Player extends Entity implements IObservable{
     }
 
     @Override
-    public void notifyObservers() throws DeathException {
+    public void notifyObservers() {
         for(IObserver observer:observerList)
         {
             observer.update(getState(),this);
