@@ -1,6 +1,5 @@
 package com.jadventure.game.menus;
 
-import com.jadventure.game.DeathException;
 import com.jadventure.game.entities.Entity;
 import com.jadventure.game.entities.Player;
 import com.jadventure.game.entities.NPC;
@@ -25,7 +24,7 @@ public class BattleMenu extends Menus {
     private double damage;
     private boolean escapeSuccessful = false;
 
-    public BattleMenu(NPC npcOpponent, Player player) throws DeathException {
+    public BattleMenu(NPC npcOpponent, Player player)  {
         this.random = new Random();
         this.npcOpponent = npcOpponent;
         this.player = player;
@@ -43,17 +42,9 @@ public class BattleMenu extends Menus {
             testSelected(selectedItem);
         }
         if (player.getHealth() == 0) {
-            QueueProvider.offer("You died... Start again? (y/n)");
-            String reply = QueueProvider.take().toLowerCase();
-            while (!reply.startsWith("y") && !reply.startsWith("n")) {
-                QueueProvider.offer("You died... Start again? (y/n)");
-                reply = QueueProvider.take().toLowerCase();
-            }
-            if (reply.startsWith("y")) {
-                throw new DeathException("restart");
-            } else if (reply.startsWith("n")) {
-                throw new DeathException("close");
-            }
+            //player died
+            player.stateChanged();
+
         }  else if (npcOpponent.getHealth() == 0) {
             int xp = npcOpponent.getXPGain();
             this.player.setXP(this.player.getXP() + xp);
@@ -88,7 +79,7 @@ public class BattleMenu extends Menus {
         }
     }
 
-    public BattleMenu(Monster monsterOpponent, Player player) throws DeathException {
+    public BattleMenu(Monster monsterOpponent, Player player)  {
         this.random = new Random();
         this.monsterOpponent = monsterOpponent;
         this.player = player;
@@ -106,17 +97,10 @@ public class BattleMenu extends Menus {
             testSelected(selectedItem);
         }
         if (player.getHealth() == 0) {
-            QueueProvider.offer("You died... Start again? (y/n)");
-            String reply = QueueProvider.take().toLowerCase();
-            while (!reply.startsWith("y") && !reply.startsWith("n")) {
-                QueueProvider.offer("You died... Start again? (y/n)");
-                reply = QueueProvider.take().toLowerCase();
-            }
-            if (reply.startsWith("y")) {
-                throw new DeathException("restart");
-            } else if (reply.startsWith("n")) {
-                throw new DeathException("close");
-            }
+
+            //player died
+            player.stateChanged();
+
         }  else if (monsterOpponent.getHealth() == 0) {
             int xp = monsterOpponent.getXPGain();
             this.player.setXP(this.player.getXP() + xp);

@@ -6,7 +6,6 @@ import com.jadventure.game.entities.Player;
 import com.jadventure.game.items.Item;
 import com.jadventure.game.repository.ItemRepository;
 import com.jadventure.game.QueueProvider;
-import com.jadventure.game.DeathException;
 import com.jadventure.game.Trading;
 
 import com.google.gson.JsonArray;
@@ -109,7 +108,7 @@ public class ConversationManager {
         return new Line(index, playerPrompt, text, condition, conditionParameter, responses, action);
     }
 
-    public void startConversation(NPC npc, Player player) throws DeathException {
+    public void startConversation(NPC npc, Player player) {
         List<Line> conversation = null;
         //Workaround as <code>lines.get(npc)</code> is not working.
         Iterator it = lines.entrySet().iterator();
@@ -144,7 +143,7 @@ public class ConversationManager {
         }
     }
 
-    private void triggerAction(Line line, NPC npc, Player player) throws DeathException {
+    private void triggerAction(Line line, NPC npc, Player player)  {
         switch (line.getAction()) {
             case ATTACK:
                 QueueProvider.offer("\n" + npc.getName() + " is now attacking you!\n");
