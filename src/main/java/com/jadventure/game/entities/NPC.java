@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -13,7 +14,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-
+import com.jadventure.game.items.Item;
 import com.jadventure.game.items.Storage;
 
 /**
@@ -22,7 +23,7 @@ import com.jadventure.game.items.Storage;
  * be placed within this class. If a method deals with entities in general or
  * with variables not unique to the NPC, place it in the entity class.
  */
-public class NPC extends Entity {
+public class NPC extends Human {
     private int xpGain;
     private String id;
     private List<String> allies;
@@ -114,6 +115,5 @@ public class NPC extends Entity {
         }
         return false;
     }
-    
-    
+
 }
