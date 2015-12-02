@@ -14,6 +14,7 @@ import com.jadventure.game.monsters.Monster;
 import com.jadventure.game.monsters.MonsterFactory;
 import com.jadventure.game.navigation.Location;
 import com.jadventure.game.navigation.LocationType;
+import com.jadventure.game.notification.DeathObserver;
 
 public class EntityTest {
 
@@ -65,6 +66,7 @@ public class EntityTest {
 	@Test
 	public void testPlayer(){
 		Player player = new Player();
+		player.addObserver(new DeathObserver());
 		
 		player.setCharacterLevel("Mage", 10);
 		assertEquals(player.getCharacterLevel("Mage"),10);
@@ -82,12 +84,7 @@ public class EntityTest {
 		
 		
 		//add test for when player is attacking
-		try {
 			player.attack("goblin");
-		} catch (DeathException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 	}
 	
