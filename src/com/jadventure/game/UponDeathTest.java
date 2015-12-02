@@ -16,6 +16,7 @@ public class UponDeathTest {
 
         assertEquals(player.getCurrentCharacterType(), "Recruit");
         assertEquals(player.getHealth(), 100);
+        assertEquals(player.getLevel(), 1);
     }
 
     @Test
