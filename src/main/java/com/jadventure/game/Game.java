@@ -45,7 +45,7 @@ public class Game {
      * It prints the introduction text first and asks for the name of the player's
      * character and welcomes him / her. After that, it goes to the normal game prompt.
      */
-    public void newGameStart(Player player) throws DeathException {
+    public void newGameStart(Player player){
         ServiceLocator.getIOHandler().sendOutput(player.getIntro());
         String userInput = ServiceLocator.getIOHandler().getInput();
         player.setName(userInput);

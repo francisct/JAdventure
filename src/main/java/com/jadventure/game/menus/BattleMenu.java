@@ -45,17 +45,7 @@ public class BattleMenu extends Menus {
         if (player.getHealth() == 0) {
             //player died
             player.stateChanged();
-            ServiceLocator.getIOHandler().sendOutput("You died... Start again? (y/n)");
-            String reply = ServiceLocator.getIOHandler().getInput().toLowerCase();
-            while (!reply.startsWith("y") && !reply.startsWith("n")) {
-                ServiceLocator.getIOHandler().sendOutput("You died... Start again? (y/n)");
-                reply = ServiceLocator.getIOHandler().getInput().toLowerCase();
-            }
-            if (reply.startsWith("y")) {
-                throw new DeathException("restart");
-            } else if (reply.startsWith("n")) {
-                throw new DeathException("close");
-            }
+            
         }  else if (npcOpponent.getHealth() == 0) {
             int xp = npcOpponent.getXPGain();
             this.player.setXP(this.player.getXP() + xp);
@@ -110,17 +100,7 @@ public class BattleMenu extends Menus {
         if (player.getHealth() == 0) {
         //player died
             player.stateChanged();
-            ServiceLocator.getIOHandler().sendOutput("You died... Start again? (y/n)");
-            String reply = ServiceLocator.getIOHandler().getInput().toLowerCase();
-            while (!reply.startsWith("y") && !reply.startsWith("n")) {
-                ServiceLocator.getIOHandler().sendOutput("You died... Start again? (y/n)");
-                reply = ServiceLocator.getIOHandler().getInput().toLowerCase();
-            }
-            if (reply.startsWith("y")) {
-                throw new DeathException("restart");
-            } else if (reply.startsWith("n")) {
-                throw new DeathException("close");
-            }
+            
         }  else if (monsterOpponent.getHealth() == 0) {
             int xp = monsterOpponent.getXPGain();
             this.player.setXP(this.player.getXP() + xp);

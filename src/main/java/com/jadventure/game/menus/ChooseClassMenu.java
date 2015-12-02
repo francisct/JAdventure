@@ -2,7 +2,6 @@ package com.jadventure.game.menus;
 
 import com.jadventure.game.entities.Player;
 import com.jadventure.runtime.ServiceLocator;
-import com.jadventure.game.DeathException;
 import com.jadventure.game.Game;
 import com.jadventure.game.notification.DeathObserver;
 
