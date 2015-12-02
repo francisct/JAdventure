@@ -1,6 +1,7 @@
 package com.jadventure.game.menus;
 
-import com.jadventure.game.QueueProvider;
+
+import com.jadventure.runtime.ServiceLocator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,11 +33,11 @@ public class Menus {
     // calls for user input from command line
     protected MenuItem selectMenu(List<MenuItem> m) {
         this.printMenuItems(m);
-        String command = QueueProvider.take();
+        String command = ServiceLocator.getIOHandler().getInput();
         if (commandMap.containsKey(command.toLowerCase())) {
             return commandMap.get(command.toLowerCase());
         } else {
-            QueueProvider.offer("I don't know what '" + command + "' means.");
+            ServiceLocator.getIOHandler().sendOutput("I don't know what '" + command + "' means.");
             return this.displayMenu(m);
         }
     }
@@ -45,9 +46,9 @@ public class Menus {
         int i = 1;
         for (MenuItem menuItem: m) {
             if (menuItem.getDescription() != null) {
-                QueueProvider.offer("[" + i + "] " + menuItem.getCommand() + " - " + menuItem.getDescription());
+                ServiceLocator.getIOHandler().sendOutput("[" + i + "] " + menuItem.getCommand() + " - " + menuItem.getDescription());
             } else {
-                QueueProvider.offer("[" + i + "] " + menuItem.getCommand());
+                ServiceLocator.getIOHandler().sendOutput("[" + i + "] " + menuItem.getCommand());
             }
             i++;
         }

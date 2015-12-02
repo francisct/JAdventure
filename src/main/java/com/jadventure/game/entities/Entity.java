@@ -1,5 +1,6 @@
 package com.jadventure.game.entities;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import com.jadventure.game.items.Item;
 import com.jadventure.game.items.ItemStack;
 import com.jadventure.game.items.Storage;
 import com.jadventure.game.repository.ItemRepository;
+import com.jadventure.runtime.ServiceLocator;
 
 /**
  * superclass for all entities (includes player, monsters...)
@@ -32,7 +34,6 @@ public abstract class Entity implements IEntity{
 
     public Entity() {
     	this(100, 100, "Default", 0, null);
-    	//this(100, 100, "default", 0, null, new HashMap<EquipmentLocation, Item>());
     }
     
     public Entity(int healthMax, int health, String name, int gold, Storage storage) {

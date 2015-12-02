@@ -5,9 +5,10 @@ import com.jadventure.game.items.Item;
 import com.jadventure.game.navigation.ILocation;
 import com.jadventure.game.navigation.Location;
 import com.jadventure.game.navigation.LocationType;
+import com.jadventure.runtime.ServiceLocator;
 import com.jadventure.game.navigation.Coordinate;
 import com.jadventure.game.GameBeans;
-import com.jadventure.game.QueueProvider;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
@@ -142,9 +143,9 @@ public class LocationRepository {
             Gson gson = new Gson();
             gson.toJson(jsonObject, writer);
             writer.close();
-            QueueProvider.offer("The game locations were saved.");
+            ServiceLocator.getIOHandler().sendOutput("The game locations were saved.");
         } catch (IOException ex) {
-            QueueProvider.offer("Unable to save to file " + fileName);
+            ServiceLocator.getIOHandler().sendOutput("Unable to save to file " + fileName);
         }
     }
 

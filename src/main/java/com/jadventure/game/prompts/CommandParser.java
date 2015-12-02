@@ -5,8 +5,9 @@ import java.lang.reflect.Method;
 import java.util.TreeMap;
 
 import com.jadventure.game.DeathException;
-import com.jadventure.game.QueueProvider;
+
 import com.jadventure.game.entities.Player;
+import com.jadventure.runtime.ServiceLocator;
 
 /**
  * CommandParser parses the game commands
@@ -65,7 +66,7 @@ public class CommandParser {
                                 if ("test".equals(player.getName())) {
                                     method.invoke(com);
                                 } else {
-                                    QueueProvider.offer("Must be using test profile to debug");
+                                    ServiceLocator.getIOHandler().sendOutput("Must be using test profile to debug");
                                 }
                             } else {
                                 method.invoke(com);
@@ -78,7 +79,7 @@ public class CommandParser {
                             }
                         }
                     } else {
-                        QueueProvider.offer("I don't know what'" + userCommand + "' means.");
+                        ServiceLocator.getIOHandler().sendOutput("I don't know what'" + userCommand + "' means.");
                         return true;
                     }
                 } else if (method.getParameterTypes()[0] == String.class) {
@@ -88,7 +89,7 @@ public class CommandParser {
                             if ("test".equals(player.getName())) {
                                 method.invoke(com, arg);
                             } else {
-                                QueueProvider.offer("Must be using test profile to debug");
+                                ServiceLocator.getIOHandler().sendOutput("Must be using test profile to debug");
                             }
                         } else {
                             method.invoke(com, arg);
@@ -104,7 +105,7 @@ public class CommandParser {
                 return true;
             }
         }
-        QueueProvider.offer("I don't know what'" + userCommand + "' means.");
+        ServiceLocator.getIOHandler().sendOutput("I don't know what'" + userCommand + "' means.");
         return true;
     }
 

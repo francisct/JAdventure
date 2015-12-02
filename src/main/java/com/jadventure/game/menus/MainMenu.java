@@ -2,7 +2,6 @@ package com.jadventure.game.menus;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,10 +9,10 @@ import java.nio.file.StandardCopyOption;
 
 import com.jadventure.game.DeathException;
 import com.jadventure.game.Game;
-import com.jadventure.game.GameModeType;
 import com.jadventure.game.JAdventure;
-import com.jadventure.game.QueueProvider;
+
 import com.jadventure.game.entities.Player;
+import com.jadventure.runtime.ServiceLocator;
 
 /**
  * The first menu displayed on user screen
@@ -21,21 +20,9 @@ import com.jadventure.game.entities.Player;
  * This menu lets the player choose whether to load an exiting game,
  * start a new one, or exit to the terminal.
  */
-public class MainMenu extends Menus implements Runnable {
-     
-    public MainMenu(Socket server, GameModeType mode){
-        QueueProvider.startMessenger(mode, server);
-    }
-
-    public MainMenu() {
-        start();
-    }
-    
-    public void run() {
-        start();
-    }
-
-    public void start() {
+public class MainMenu extends Menus {
+            
+    public void show() {
         this.menuItems.add(new MenuItem("Start", "Starts a new Game", "new"));
         this.menuItems.add(new MenuItem("Load", "Loads an existing Game"));
         this.menuItems.add(new MenuItem("Delete", "Deletes an existing Game"));
@@ -54,7 +41,7 @@ public class MainMenu extends Menus implements Runnable {
                 }
             }
         }
-        QueueProvider.offer("EXIT");
+        ServiceLocator.getIOHandler().sendOutput("EXIT");
     
     }
 
@@ -67,28 +54,28 @@ public class MainMenu extends Menus implements Runnable {
                     Path dest = Paths.get("json/locations.json");
                     Files.copy(orig, dest, StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException ex) {
-                    QueueProvider.offer("Unable to load new locations file.");
+                    ServiceLocator.getIOHandler().sendOutput("Unable to load new locations file.");
                     ex.printStackTrace();
                 }
                 new ChooseClassMenu();
                 break;
             case "exit":
-                QueueProvider.offer("Goodbye!");
+                ServiceLocator.getIOHandler().sendOutput("Goodbye!");
                 return false;
             case "load":
                 listProfiles();
-                QueueProvider.offer("\nWhat is the name of the avatar you want to load? Type 'back' to go back");
+                ServiceLocator.getIOHandler().sendOutput("\nWhat is the name of the avatar you want to load? Type 'back' to go back");
                 Player player = null;
                 boolean exit = false;
                 while (player == null) {
-                    key = QueueProvider.take();
+                    key = ServiceLocator.getIOHandler().getInput();
                     if (Player.profileExists(key)) {
                         player = Player.load(key);
                     } else if (key.equals("exit") || key.equals("back")) {
                         exit = true;
                         break;
                     } else {
-                        QueueProvider.offer("That user doesn't exist. Try again.");
+                        ServiceLocator.getIOHandler().sendOutput("That user doesn't exist. Try again.");
                     }
                 }
                 if (exit) {
@@ -98,28 +85,28 @@ public class MainMenu extends Menus implements Runnable {
                 break;
             case "delete":
                 listProfiles();
-                QueueProvider.offer("\nWhich profile do you want to delete? Type 'back' to go back");
+                ServiceLocator.getIOHandler().sendOutput("\nWhich profile do you want to delete? Type 'back' to go back");
                 exit = false;
                 while (!exit) {
-                    key = QueueProvider.take();
+                    key = ServiceLocator.getIOHandler().getInput();
                     if (Player.profileExists(key)) {
                         String profileName = key;
-                        QueueProvider.offer("Are you sure you want to delete " + profileName + "? y/n");
-                        key = QueueProvider.take();
+                        ServiceLocator.getIOHandler().sendOutput("Are you sure you want to delete " + profileName + "? y/n");
+                        key = ServiceLocator.getIOHandler().getInput();
                         if (key.equals("y")) {
                             File profile = new File("json/profiles/" + profileName);
                             deleteDirectory(profile);
-                            QueueProvider.offer("Profile Deleted");
+                            ServiceLocator.getIOHandler().sendOutput("Profile Deleted");
                             return true;
                         } else {
                             listProfiles();
-                            QueueProvider.offer("\nWhich profile do you want to delete?");
+                            ServiceLocator.getIOHandler().sendOutput("\nWhich profile do you want to delete?");
                         }
                     } else if (key.equals("exit") || key.equals("back")) {
                         exit = true;
                         break;
                     } else {
-                        QueueProvider.offer("That user doesn't exist. Try again.");
+                        ServiceLocator.getIOHandler().sendOutput("That user doesn't exist. Try again.");
                     }
                 }
                 break;
@@ -145,13 +132,13 @@ public class MainMenu extends Menus implements Runnable {
     }
 
     private static void listProfiles() {
-        QueueProvider.offer("Profiles:");
+        ServiceLocator.getIOHandler().sendOutput("Profiles:");
         File file = new File("json/profiles");
         String[] profiles = file.list();
         int i = 1;
         for (String name : profiles) {
             if (new File("json/profiles/" + name).isDirectory()) {
-                QueueProvider.offer("  " + i + ". " + name);
+                ServiceLocator.getIOHandler().sendOutput("  " + i + ". " + name);
             }
            i += 1;
         }

@@ -14,7 +14,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import com.jadventure.game.QueueProvider;
 import com.jadventure.game.items.Item;
 import com.jadventure.game.items.Storage;
 
