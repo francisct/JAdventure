@@ -4,7 +4,6 @@ import com.jadventure.game.entities.Entity;
 import com.jadventure.game.entities.EquipmentLocation;
 import com.jadventure.game.items.Item;
 import com.jadventure.game.GameBeans;
-import com.jadventure.game.QueueProvider;
 import com.jadventure.game.repository.ItemRepository;
 
 import java.util.List;

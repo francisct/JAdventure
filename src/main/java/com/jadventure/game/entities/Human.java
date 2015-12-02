@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.jadventure.game.items.Item;
 import com.jadventure.game.items.Storage;
+import com.jadventure.runtime.ServiceLocator;
 
 public class Human extends Entity{
 
@@ -134,37 +135,37 @@ public class Human extends Entity{
 	}
 
 	public void printEquipment() {
-	    QueueProvider.offer("\n------------------------------------------------------------");
-	    QueueProvider.offer("Equipped Items:");
-	    if (equipment.keySet().size() == 0) {
-	        QueueProvider.offer("--Empty--");
-	    } else {
-	        int i = 0;
-	        Item hands = itemRepo.getItem("hands");
-	        Map<EquipmentLocation, String> locations = new HashMap<>();
-	        locations.put(EquipmentLocation.HEAD, "Head");
-	        locations.put(EquipmentLocation.CHEST, "Chest");
-	        locations.put(EquipmentLocation.LEFT_ARM, "Left arm");
-	        locations.put(EquipmentLocation.LEFT_HAND, "Left hand");
-	        locations.put(EquipmentLocation.RIGHT_ARM, "Right arm");
-	        locations.put(EquipmentLocation.RIGHT_HAND, "Right hand");
-	        locations.put(EquipmentLocation.BOTH_HANDS, "Both hands");
-	        locations.put(EquipmentLocation.BOTH_ARMS, "Both arms");
-	        locations.put(EquipmentLocation.LEGS, "Legs");
-	        locations.put(EquipmentLocation.FEET, "Feet");
-	        for (Map.Entry<EquipmentLocation, Item> item : equipment.entrySet()) {
-	            if (item.getKey() != null && !hands.equals(item.getValue()) && item.getValue() != null) {
-	                QueueProvider.offer(locations.get(item.getKey()) + " - " + item.getValue().getName());
-	            } else {
-	                i++;
-	            }
-	        }
-	        if (i == equipment.keySet().size()) {
-	            QueueProvider.offer("--Empty--");
-	        }
-	    }
-	    QueueProvider.offer("------------------------------------------------------------"); 
-	}
+        ServiceLocator.getIOHandler().sendOutput("\n------------------------------------------------------------");
+        ServiceLocator.getIOHandler().sendOutput("Equipped Items:");
+        if (equipment.keySet().size() == 0) {
+            ServiceLocator.getIOHandler().sendOutput("--Empty--");
+        } else {
+            int i = 0;
+            Item hands = itemRepo.getItem("hands");
+            Map<EquipmentLocation, String> locations = new HashMap<>();
+            locations.put(EquipmentLocation.HEAD, "Head");
+            locations.put(EquipmentLocation.CHEST, "Chest");
+            locations.put(EquipmentLocation.LEFT_ARM, "Left arm");
+            locations.put(EquipmentLocation.LEFT_HAND, "Left hand");
+            locations.put(EquipmentLocation.RIGHT_ARM, "Right arm");
+            locations.put(EquipmentLocation.RIGHT_HAND, "Right hand");
+            locations.put(EquipmentLocation.BOTH_HANDS, "Both hands");
+            locations.put(EquipmentLocation.BOTH_ARMS, "Both arms");
+            locations.put(EquipmentLocation.LEGS, "Legs");
+            locations.put(EquipmentLocation.FEET, "Feet");
+            for (Map.Entry<EquipmentLocation, Item> item : equipment.entrySet()) {
+                if (item.getKey() != null && !hands.equals(item.getValue()) && item.getValue() != null) {
+                    ServiceLocator.getIOHandler().sendOutput(locations.get(item.getKey()) + " - " + item.getValue().getName());
+                } else {
+                    i++;
+                }
+            }
+            if (i == equipment.keySet().size()) {
+                ServiceLocator.getIOHandler().sendOutput("--Empty--");
+            }
+        }
+        ServiceLocator.getIOHandler().sendOutput("------------------------------------------------------------"); 
+    }
 
 	public void setIntro(String intro) {
 	    this.intro = intro;

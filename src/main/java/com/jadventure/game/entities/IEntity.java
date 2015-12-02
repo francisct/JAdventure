@@ -1,5 +1,13 @@
 package com.jadventure.game.entities;
 
-public interface IEntity {
+import com.jadventure.game.items.Item;
+import com.jadventure.game.items.ItemStack;
 
+public interface IEntity {
+	
+	public void printStorage();
+	    
+	public void addItemToStorage(Item item);
+
+    public void removeItemFromStorage(Item item);
 }
