@@ -11,6 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.jadventure.game.entities.Player;
+import com.jadventure.runtime.ServiceLocator;
 
 public class CharacterChange {
     public void trigger(Player player, String triggerType, String keyword) {
@@ -34,13 +35,13 @@ public class CharacterChange {
                         characterEffects = events.get(keyword).getAsJsonObject();
                         goAhead = true;
                     } else {
-                        //QueueProvider.offer("Warning: The effects for the '" + triggerType + "' event and the '" + currentCharacter + "' character was not found");
+                        //ServiceLocator.getIOManager().sendOutput("Warning: The effects for the '" + triggerType + "' event and the '" + currentCharacter + "' character was not found");
                     }
                 } else {
-                    //QueueProvider.offer("Warning: The event '" + triggerType + "' for the '" + currentCharacter + "' character was not found");
+                    //ServiceLocator.getIOManager().sendOutput("Warning: The event '" + triggerType + "' for the '" + currentCharacter + "' character was not found");
                 }
             } else {
-                //QueueProvider.offer("Warning: The character '" + currentCharacter + "' was not found");
+                //ServiceLocator.getIOManager().sendOutput("Warning: The character '" + currentCharacter + "' was not found");
             }
 
             if (goAhead == true) {
@@ -75,7 +76,7 @@ public class CharacterChange {
         }
         if (!highestCharacter.equals(currentCharacter)) {
             player.setCurrentCharacterType(highestCharacter);
-            QueueProvider.offer("You're character type is now changed! You are now a " + highestCharacter + "!");
+            ServiceLocator.getIOHandler().sendOutput("You're character type is now changed! You are now a " + highestCharacter + "!");
         }
         it = characterLevels.entrySet().iterator();
         while (it.hasNext()) {

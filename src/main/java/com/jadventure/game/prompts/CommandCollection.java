@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jadventure.game.DeathException;
-import com.jadventure.game.QueueProvider;
+
 import com.jadventure.game.conversation.ConversationManager;
 import com.jadventure.game.entities.Player;
 import com.jadventure.game.entities.NPC;
@@ -22,6 +22,7 @@ import com.jadventure.game.navigation.ILocation;
 import com.jadventure.game.navigation.LocationType;
 import com.jadventure.game.repository.ItemRepository;
 import com.jadventure.game.repository.LocationRepository;
+import com.jadventure.runtime.ServiceLocator;
 import com.jadventure.game.DeathException;
 import com.jadventure.game.GameBeans;
 
@@ -64,7 +65,7 @@ public enum CommandCollection {
         Method[] methods = CommandCollection.class.getMethods();
         int commandWidth = 0;
         int descriptionWidth = 0;
-        QueueProvider.offer("");
+        ServiceLocator.getIOHandler().sendOutput("");
         for (Method method : methods) {
             if (!method.isAnnotationPresent(Command.class)) {
                 continue;
@@ -91,10 +92,10 @@ public enum CommandCollection {
                     annotation.description());
             if (annotation.debug()) {
                 if ("test".equals(player.getName())) {
-                    QueueProvider.offer(message);
+                    ServiceLocator.getIOHandler().sendOutput(message);
                 }
             } else {
-                QueueProvider.offer(message);
+                ServiceLocator.getIOHandler().sendOutput(message);
                 
             }
         }
@@ -110,14 +111,14 @@ public enum CommandCollection {
     public void command_m() {
         List<Monster> monsterList = player.getLocation().getMonsters();
         if (monsterList.size() > 0) {
-            QueueProvider.offer("Monsters around you:");
-            QueueProvider.offer("----------------------------");
+            ServiceLocator.getIOHandler().sendOutput("Monsters around you:");
+            ServiceLocator.getIOHandler().sendOutput("----------------------------");
             for (Monster monster : monsterList) {
-                QueueProvider.offer(monster.monsterType);
+                ServiceLocator.getIOHandler().sendOutput(monster.monsterType);
             }
-            QueueProvider.offer("----------------------------");
+            ServiceLocator.getIOHandler().sendOutput("----------------------------");
         } else {
-            QueueProvider.offer("There are no monsters around you'n");
+            ServiceLocator.getIOHandler().sendOutput("There are no monsters around you'n");
         }
     }
 
@@ -134,7 +135,7 @@ public enum CommandCollection {
                 if (!newLocation.getLocationType().equals(LocationType.WALL)) {
                     player.setLocation(newLocation);
                     if ("test".equals(player.getName())) {
-                        QueueProvider.offer(player.getLocation().getCoordinate().toString());
+                        ServiceLocator.getIOHandler().sendOutput(player.getLocation().getCoordinate().toString());
                     }
                     player.getLocation().print();
                     Random random = new Random();
@@ -157,20 +158,20 @@ public enum CommandCollection {
                         if (monsters.size() > 0) {
                             int posMonster = random.nextInt(monsters.size());
                             String monster = monsters.get(posMonster).monsterType;
-                            QueueProvider.offer("A " + monster + " is attacking you!");
+                            ServiceLocator.getIOHandler().sendOutput("A " + monster + " is attacking you!");
                             player.attack(monster);
                         }
                     }
                 } else {
-                    QueueProvider.offer("You cannot walk through walls.");
+                    ServiceLocator.getIOHandler().sendOutput("You cannot walk through walls.");
                 }
             } else {
-                QueueProvider.offer("The is no exit that way.");
+                ServiceLocator.getIOHandler().sendOutput("The is no exit that way.");
             }
         } catch (IllegalArgumentException ex) {
-            QueueProvider.offer("That direction doesn't exist");
+            ServiceLocator.getIOHandler().sendOutput("That direction doesn't exist");
         } catch (NullPointerException ex) {
-            QueueProvider.offer("That direction doesn't exist");
+            ServiceLocator.getIOHandler().sendOutput("That direction doesn't exist");
         }
     }
 
@@ -206,7 +207,7 @@ public enum CommandCollection {
                 player.printStorage();
                 break;
             default:
-                QueueProvider.offer("That is not a valid display");
+                ServiceLocator.getIOHandler().sendOutput("That is not a valid display");
                 break;
         }
     }
@@ -245,7 +246,7 @@ public enum CommandCollection {
         if (healthMax > 0) {
             player.setHealthMax(healthMax);
         } else {
-            QueueProvider.offer("Maximum health must be possitive");
+            ServiceLocator.getIOHandler().sendOutput("Maximum health must be possitive");
         }
     }
 
@@ -255,7 +256,7 @@ public enum CommandCollection {
         if (health > 0) {
             player.setHealth(health);
         } else {
-            QueueProvider.offer("Health must be possitive");
+            ServiceLocator.getIOHandler().sendOutput("Health must be possitive");
         }
     }
 
@@ -287,7 +288,7 @@ public enum CommandCollection {
             player.getLocation().print();
         } catch (NullPointerException e) {
             player.setLocation(oldLocation);
-            QueueProvider.offer("There is no such location");
+            ServiceLocator.getIOHandler().sendOutput("There is no such location");
         }
     }
 
@@ -309,7 +310,7 @@ public enum CommandCollection {
         if (npc != null) {
             cm.startConversation(npc, player);
         } else {
-            QueueProvider.offer("Unable to talk to " + arg);
+            ServiceLocator.getIOHandler().sendOutput("Unable to talk to " + arg);
         }
     }
 

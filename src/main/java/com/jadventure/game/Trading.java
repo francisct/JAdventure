@@ -12,6 +12,7 @@ import com.jadventure.game.items.Item;
 import com.jadventure.game.menus.MenuItem;
 import com.jadventure.game.menus.Menus;
 import com.jadventure.game.repository.ItemRepository;
+import com.jadventure.runtime.ServiceLocator;
 
 public class Trading {
     NPC npc;
@@ -48,11 +49,11 @@ public class Trading {
     }
     
     public void playerBuy() {
-        QueueProvider.offer(npc.getName() + "'s items:\t" + npc.getName()  + "'s gold:" + npc.getGold() + "\n");
-        QueueProvider.offer(npc.getStorage().displayWithValue());
+        ServiceLocator.getIOHandler().sendOutput(npc.getName() + "'s items:\t" + npc.getName()  + "'s gold:" + npc.getGold() + "\n");
+        ServiceLocator.getIOHandler().sendOutput(npc.getStorage().displayWithValue());
 
-        QueueProvider.offer("You have " + player.getGold() + " gold coins.\nWhat do you want to buy?");
-        String itemName = QueueProvider.take();
+        ServiceLocator.getIOHandler().sendOutput("You have " + player.getGold() + " gold coins.\nWhat do you want to buy?");
+        String itemName = ServiceLocator.getIOHandler().getInput();
 
         if ("exit".equals(itemName) || "back".equals(itemName)) {
             return;
@@ -61,23 +62,23 @@ public class Trading {
         Item item = tradeItem(npc, player, itemName);
         if (item != null) {
             if (item != itemRepo.getItem("empty")) {
-                QueueProvider.offer("You have bought a " + item.getName() + " for " + item.getProperties().get("value") + " gold coins.");
-                QueueProvider.offer("You now have " + player.getGold() + " gold coins remaining.");
+                ServiceLocator.getIOHandler().sendOutput("You have bought a " + item.getName() + " for " + item.getProperties().get("value") + " gold coins.");
+                ServiceLocator.getIOHandler().sendOutput("You now have " + player.getGold() + " gold coins remaining.");
             }
             else {
-                QueueProvider.offer("You do not have enough money!");
+                ServiceLocator.getIOHandler().sendOutput("You do not have enough money!");
             }
         } else {
-            QueueProvider.offer("Either this item doesn't exist or this character does not own that item");
+            ServiceLocator.getIOHandler().sendOutput("Either this item doesn't exist or this character does not own that item");
         }
     }
 
     public void playerSell() {
-        QueueProvider.offer(player.getName() + "'s items:\t" + npc.getName()  + "'s gold:" + npc.getGold() + "\n");
-        QueueProvider.offer(player.getStorage().displayWithValue());
+        ServiceLocator.getIOHandler().sendOutput(player.getName() + "'s items:\t" + npc.getName()  + "'s gold:" + npc.getGold() + "\n");
+        ServiceLocator.getIOHandler().sendOutput(player.getStorage().displayWithValue());
         
-        QueueProvider.offer("You have " + player.getGold() + " gold coins.\nWhat do you want to sell?");
-        String itemName = QueueProvider.take();
+        ServiceLocator.getIOHandler().sendOutput("You have " + player.getGold() + " gold coins.\nWhat do you want to sell?");
+        String itemName = ServiceLocator.getIOHandler().getInput();
  
         if ("exit".equals(itemName) || "back".equals(itemName)) {
             return;
@@ -85,14 +86,14 @@ public class Trading {
         Item item = tradeItem(player, npc, itemName);
         if (item != null) {
             if (item != itemRepo.getItem("empty")) {
-                QueueProvider.offer("You have sold a " + item.getName() + " for " + item.getProperties().get("value") + " gold coins.");
-                QueueProvider.offer("You now have " + player.getGold() + " gold coins remaining.");
+                ServiceLocator.getIOHandler().sendOutput("You have sold a " + item.getName() + " for " + item.getProperties().get("value") + " gold coins.");
+                ServiceLocator.getIOHandler().sendOutput("You now have " + player.getGold() + " gold coins remaining.");
             }
             else {
-                QueueProvider.offer(npc.getName() + " does not have enough money!");
+                ServiceLocator.getIOHandler().sendOutput(npc.getName() + " does not have enough money!");
             }
         } else {
-            QueueProvider.offer("Either this item doesn't exist or this character does not own that item");
+            ServiceLocator.getIOHandler().sendOutput("Either this item doesn't exist or this character does not own that item");
         }
     }
 

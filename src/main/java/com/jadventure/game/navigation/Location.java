@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jadventure.game.GameBeans;
-import com.jadventure.game.QueueProvider;
+
 import com.jadventure.game.entities.NPC;
 import com.jadventure.game.items.Item;
 import com.jadventure.game.items.Storage;
@@ -16,6 +16,7 @@ import com.jadventure.game.repository.ItemRepository;
 import com.jadventure.game.repository.LocationRepository;
 import com.jadventure.game.repository.NpcRepository;
 import com.jadventure.game.repository.RepositoryException;
+import com.jadventure.runtime.ServiceLocator;
 
 /**
  * The location class mostly deals with getting and setting variables.
@@ -162,26 +163,26 @@ public class Location implements ILocation {
     }
 
     public void print() {
-        QueueProvider.offer("\n" + getTitle() + ":");
-        QueueProvider.offer("    " + getDescription());
+        ServiceLocator.getIOHandler().sendOutput("\n" + getTitle() + ":");
+        ServiceLocator.getIOHandler().sendOutput("    " + getDescription());
         List<Item> items = getItems();
         if (!items.isEmpty()) {
-            QueueProvider.offer("Items:");
+            ServiceLocator.getIOHandler().sendOutput("Items:");
             for (Item item : items) {
-                QueueProvider.offer("    " + item.getName());
+                ServiceLocator.getIOHandler().sendOutput("    " + item.getName());
             }
         }
         List<NPC> npcs = getNpcs();
         if (!npcs.isEmpty()) {
-            QueueProvider.offer("NPCs:");
+            ServiceLocator.getIOHandler().sendOutput("NPCs:");
             for (NPC npc : npcs) {
-                QueueProvider.offer("   " + npc.getName());
+                ServiceLocator.getIOHandler().sendOutput("   " + npc.getName());
             }
         }
-        QueueProvider.offer("");
+        ServiceLocator.getIOHandler().sendOutput("");
         for (Map.Entry<Direction,ILocation> direction : getExits().entrySet()) {
-		QueueProvider.offer(direction.getKey().getDescription() + ": ");
-    		QueueProvider.offer("    " + direction.getValue().getDescription());
+		ServiceLocator.getIOHandler().sendOutput(direction.getKey().getDescription() + ": ");
+    		ServiceLocator.getIOHandler().sendOutput("    " + direction.getValue().getDescription());
         }
     }
 }
