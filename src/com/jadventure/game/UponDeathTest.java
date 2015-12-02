@@ -15,7 +15,7 @@ public class UponDeathTest {
         player.addObserver(new DeathObserver());
 
         assertEquals(player.getCurrentCharacterType(), "Recruit");
-        
+        assertEquals(player.getHealth(), 100);
     }
 
     @Test
