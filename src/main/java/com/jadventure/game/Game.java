@@ -3,6 +3,7 @@ package com.jadventure.game;
 import com.jadventure.game.entities.Player;
 import com.jadventure.game.monsters.Monster;
 import com.jadventure.game.monsters.MonsterFactory;
+import com.jadventure.game.notification.DeathObserver;
 import com.jadventure.game.repository.LocationRepository;
 import com.jadventure.runtime.ServiceLocator;
 import com.jadventure.game.prompts.CommandParser;
@@ -20,7 +21,7 @@ public class Game {
     public Monster monster;
     Player player = null;
 
-    public Game(Player player, String playerType) throws DeathException {
+    public Game(Player player, String playerType)  {
           this.parser = new CommandParser(player);
           this.player = player;
           switch (playerType) {
@@ -56,26 +57,24 @@ public class Game {
         gamePrompt(player);
     }
 
+
+
     /**
      * This is the main loop for the player-game interaction. It gets input from the
      * command line and checks if it is a recognised command.
      *
      * This keeps looping as long as the player didn't type an exit command.
      */
-    public void gamePrompt(Player player) throws DeathException {
+
+
+    public void gamePrompt(Player player)   {
         boolean continuePrompt = true;
-        try {
+       
             while (continuePrompt) {
                 ServiceLocator.getIOHandler().sendOutput("\nPrompt:");
                 String command = ServiceLocator.getIOHandler().getInput().toLowerCase();
                 continuePrompt = parser.parse(player, command);
             }
-        } catch (DeathException e) {
-            if (e.getLocalisedMessage().equals("replay")) {
-                return;
-            } else {
-                throw e;
-            }
-        }
+
     }
 }

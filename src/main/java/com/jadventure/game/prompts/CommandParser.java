@@ -4,8 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.TreeMap;
 
-import com.jadventure.game.DeathException;
-
 import com.jadventure.game.entities.Player;
 import com.jadventure.runtime.ServiceLocator;
 
@@ -44,7 +42,7 @@ public class CommandParser {
         }
     }
 
-    public boolean parse(Player player, String userCommand) throws DeathException {
+    public boolean parse(Player player, String userCommand) {
         CommandCollection com = CommandCollection.getInstance();
         com.initPlayer(player);
 
@@ -72,11 +70,7 @@ public class CommandParser {
                                 method.invoke(com);
                             }
                         } catch (IllegalAccessException | InvocationTargetException e) {
-                            if (e.getCause() instanceof DeathException) {
-                                throw (DeathException) e.getCause();
-                            } else {
                                 e.getCause().printStackTrace();
-                            }
                         }
                     } else {
                         ServiceLocator.getIOHandler().sendOutput("I don't know what'" + userCommand + "' means.");
@@ -95,11 +89,8 @@ public class CommandParser {
                             method.invoke(com, arg);
                         }
                     } catch (IllegalAccessException | InvocationTargetException e) {
-                        if (e.getCause() instanceof DeathException) {
-                            throw (DeathException) e.getCause();
-                        } else {
                             e.getCause().printStackTrace();
-                        }
+
                     }
                 }
                 return true;

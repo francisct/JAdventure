@@ -1,6 +1,5 @@
 package com.jadventure.game.menus;
 
-import com.jadventure.game.DeathException;
 import com.jadventure.game.entities.Entity;
 import com.jadventure.game.entities.Player;
 import com.jadventure.game.entities.NPC;
@@ -26,7 +25,7 @@ public class BattleMenu extends Menus {
     private double damage;
     private boolean escapeSuccessful = false;
 
-    public BattleMenu(NPC npcOpponent, Player player) throws DeathException {
+    public BattleMenu(NPC npcOpponent, Player player)  {
         this.random = new Random();
         this.npcOpponent = npcOpponent;
         this.player = player;
@@ -44,6 +43,8 @@ public class BattleMenu extends Menus {
             testSelected(selectedItem);
         }
         if (player.getHealth() == 0) {
+            //player died
+            player.stateChanged();
             ServiceLocator.getIOHandler().sendOutput("You died... Start again? (y/n)");
             String reply = ServiceLocator.getIOHandler().getInput().toLowerCase();
             while (!reply.startsWith("y") && !reply.startsWith("n")) {
@@ -89,7 +90,7 @@ public class BattleMenu extends Menus {
         }
     }
 
-    public BattleMenu(Monster monsterOpponent, Player player) throws DeathException {
+    public BattleMenu(Monster monsterOpponent, Player player)  {
         this.random = new Random();
         this.monsterOpponent = monsterOpponent;
         this.player = player;
@@ -107,6 +108,8 @@ public class BattleMenu extends Menus {
             testSelected(selectedItem);
         }
         if (player.getHealth() == 0) {
+        //player died
+            player.stateChanged();
             ServiceLocator.getIOHandler().sendOutput("You died... Start again? (y/n)");
             String reply = ServiceLocator.getIOHandler().getInput().toLowerCase();
             while (!reply.startsWith("y") && !reply.startsWith("n")) {

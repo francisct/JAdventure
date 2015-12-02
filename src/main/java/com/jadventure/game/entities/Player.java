@@ -7,28 +7,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Random;
-import java.util.Set;
+import java.util.Observer;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
-import com.jadventure.game.DeathException;
 import com.jadventure.game.GameBeans;
 
 import com.jadventure.game.items.Item;
@@ -39,6 +27,7 @@ import com.jadventure.game.monsters.Monster;
 import com.jadventure.game.navigation.Coordinate;
 import com.jadventure.game.navigation.ILocation;
 import com.jadventure.game.navigation.LocationType;
+import com.jadventure.game.notification.*;
 import com.jadventure.game.repository.ItemRepository;
 import com.jadventure.game.repository.LocationRepository;
 import com.jadventure.runtime.ServiceLocator;
@@ -49,7 +38,7 @@ import com.jadventure.runtime.ServiceLocator;
  * be placed within this class. If a method deals with entities in general or
  * with variables not unique to the player, place it in the entity class.
  */
-public class Player extends Human {
+public class Player extends Human implements IObservable{
     // @Resource
     protected static ItemRepository itemRepo = GameBeans.getItemRepository();
     protected static LocationRepository locationRepo = GameBeans.getLocationRepository();
@@ -479,7 +468,7 @@ public class Player extends Human {
     	return getLocation().getLocationType();
     }
 
-    public void attack(String opponentName) throws DeathException {
+    public void attack(String opponentName){
         Monster monsterOpponent = null;
         NPC npcOpponent = null;
         List<Monster> monsters = getLocation().getMonsters();
@@ -508,5 +497,39 @@ public class Player extends Human {
         List<Item> searchEquipment = searchEquipment(item.getName(), getEquipment());
         List<Item> searchStorage = searchItem(item.getName(), getStorage());
         return !(searchEquipment.size() == 0 && searchStorage.size() == 0);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    private List<IObserver> observerList = new ArrayList<>();
+    private boolean isAlive = true; //player state
+
+    public boolean getState()
+    {
+        return this.isAlive;
+    }
+
+    //player died
+    public void stateChanged() {
+        this.isAlive = false;
+        notifyObservers();
+    }
+
+
+    @Override
+    public void addObserver(IObserver observer) {
+        observerList.add(observer);
+    }
+
+    @Override
+    public void removeObserver(IObserver observer) {
+        observerList.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(IObserver observer:observerList)
+        {
+            observer.update(getState(),this);
+        }
     }
 }

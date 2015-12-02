@@ -9,8 +9,6 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jadventure.game.DeathException;
-
 import com.jadventure.game.conversation.ConversationManager;
 import com.jadventure.game.entities.Player;
 import com.jadventure.game.entities.NPC;
@@ -23,7 +21,6 @@ import com.jadventure.game.navigation.LocationType;
 import com.jadventure.game.repository.ItemRepository;
 import com.jadventure.game.repository.LocationRepository;
 import com.jadventure.runtime.ServiceLocator;
-import com.jadventure.game.DeathException;
 import com.jadventure.game.GameBeans;
 
 /**
@@ -123,7 +120,7 @@ public enum CommandCollection {
     }
 
     @Command(command="go", aliases="g", description="Goto a direction", debug=false)
-    public void command_g(String arg) throws DeathException {
+    public void command_g(String arg){
         ILocation location = player.getLocation();
 
         try {
@@ -223,7 +220,7 @@ public enum CommandCollection {
     }
 
     @Command(command="attack", aliases="a", description="Attacks an entity", debug=false)
-    public void command_a(String arg) throws DeathException {
+    public void command_a(String arg)  {
        player.attack(arg.trim());
     }
 
@@ -298,7 +295,7 @@ public enum CommandCollection {
     }
     
     @Command(command="talk", aliases="t", description="Talks to a character.", debug=false)
-    public void command_talk(String arg) throws DeathException {
+    public void command_talk(String arg)  {
         ConversationManager cm = new ConversationManager();
         List<NPC> npcs = player.getLocation().getNpcs();
         NPC npc = null;
