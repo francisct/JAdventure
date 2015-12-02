@@ -48,8 +48,7 @@ public class Server {
             ServiceLocator.provide(new NetworkIOHandler(client));
 
             MainMenu menu = new MainMenu();
-            //menu.show();
-            menu.start();
+            menu.show();
         }
 
         private Socket client;

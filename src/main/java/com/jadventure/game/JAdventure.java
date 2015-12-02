@@ -38,8 +38,7 @@ public class JAdventure {
         } else {
             ServiceLocator.provide(new LocalIOHandler());
             MainMenu menu = new MainMenu();
-            //menu.show();
-            menu.start();
+            menu.show();
         }
     }
 

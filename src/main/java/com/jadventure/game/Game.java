@@ -70,7 +70,7 @@ public class Game {
     public void gamePrompt(Player player)   {
         boolean continuePrompt = true;
        
-            while (continuePrompt) {
+            while (continuePrompt && player.getState()) {
                 ServiceLocator.getIOHandler().sendOutput("\nPrompt:");
                 String command = ServiceLocator.getIOHandler().getInput().toLowerCase();
                 continuePrompt = parser.parse(player, command);
